@@ -32,6 +32,19 @@ def pandasImport():
     n = d['funcionarios']
     dfpandas = pd.DataFrame.from_dict(n)
     print(dfpandas)
+    byArea = dfpandas.groupby('area')
+
+    print(byArea['nome'])
+
+    print("Média por área:")
+    print(byArea.mean())
+
+    print("Mínimos por área:")
+    print(byArea.min())
+
+    print("Máximos por área:")
+    print(byArea.max())
+    return dfpandas
 
 def showTable(f):
     print("id\tnome\tsalario\tarea")
