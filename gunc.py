@@ -47,12 +47,12 @@ def pandasImport():
     return dfpandas
 
 def showTable(f):
-    print("id\tnome\tsalario\tarea")
+    print("id\tarea\tsalario\tnome.sobrenome")
     for i in range(0,len(f)):
         print(i, end="\t")
-        print(f[i]['nome'],end="\t")
+        print(f[i]['area'],end="\t")
         print(f[i]['salario'],end="\t")
-        print(f[i]['area'], end="\n")
+        print(f[i]['nome']+"."+f[i]['sobrenome'])
 
 def checkMaxSal(dd):
     max = 0
