@@ -7,7 +7,7 @@ import json
 import os
 import pandas as pd
 
-def safeClear():
+def screenClear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def next():
@@ -27,24 +27,16 @@ def dao(typef):
 f = dao("F")
 
 def pandasImport():
-    with open(file) as json_data:
-        d = json.load(json_data)
-    n = d['funcionarios']
+    n = dao("F")
     dfpandas = pd.DataFrame.from_dict(n)
-    print(dfpandas)
-    byArea = dfpandas.groupby('area')
-
-    print(byArea['nome'])
-
-    print("Média por área:")
-    print(byArea.mean())
-
-    print("Mínimos por área:")
-    print(byArea.min())
-
-    print("Máximos por área:")
-    print(byArea.max())
+    print(dfpandas.sort_values(by=['area','salario','nome'], ascending=True).loc[:,["area","salario","nome"]])
     return dfpandas
+
+def showSibblings():
+	n = dao("F")
+	dfpandas = pd.DataFrame.from_dict(n)
+	g = dfpandas['nome'].value_counts()
+	print("Sibblings: \n%s" % g)
 
 def showTable(f):
     print("id\tarea\tsalario\tnome.sobrenome")
@@ -103,7 +95,7 @@ def checkAreaSal():
                     smin = stFunc[k]['salario']
                     idmin = (stFunc[k]['nome'], stFunc[k]['salario'], stFunc[k]['area'])
         count.append(index)
-        print("Média Salarial em  %s \t %.2f " % (stArea[i]['nome'], sum/index))
+        print("Média Salarial em \"%s\" \t %.2f " % (stArea[i]['nome'], sum/index))
         #print("Funcionário  %s está rico ganhando %.2f na área %s" % (idmax[0], idmax[1], idmax[2]) )
         print("Max: %s %s" %(idmax,smax,))
         print("Min: %s %s" %(idmin,smin,))
@@ -112,35 +104,40 @@ def checkAreaSal():
     print("Área com (-) integrantes: %i %s" % (min(count), stArea[count.index(min(count))]['nome']) )
 
 def statSal(f):
-    print("Max Sal: %s %.2f " % (checkMaxSal(f)[0], checkMaxSal(f)[1]) )
-    print("Mean Sal: %.2f" % checkMeanSal(f))
-    print("Min Sal: %s %.2f" % (checkMinSal(f)[0], checkMinSal(f)[1]) )
+    print("Maior Salário: %s %.2f " % (checkMaxSal(f)[0], checkMaxSal(f)[1]) )
+    print("Média Salários: %.2f" % checkMeanSal(f))
+    print("Menor Salário: %s %.2f" % (checkMinSal(f)[0], checkMinSal(f)[1]) )
 
 while(True):
-    safeClear()
-    print("Desafio 5 - Tada!!!")
+    screenClear()
+    print("--{:: Desafio 5 ::}--")
     print("1 - Mostrar Tabela")
     print("2 - Estatística Geral")
     print("3 - Estatística Área")
     print("4 - Pandas MODE")
     print("5 - Sair")
+    print("6 - Sibblings")
     ans = int(input())
     if ans == 1:
-        safeClear()
+        screenClear()
         showTable(f)
         next()
     if ans == 2:
-        safeClear()
+        screenClear()
         statSal(f)
         next()
     if ans == 3:
-        safeClear()
+        screenClear()
         checkAreaSal()
         next()
     if ans == 4:
-        safeClear()
+        screenClear()
         pandasImport()
         next()
-    if ans ==5:
+    if ans == 5:
         print("Bye!")
         break
+    if ans == 6:
+    	screenClear()
+    	showSibblings()
+    	next()
