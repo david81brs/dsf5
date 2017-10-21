@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 #Quem mais recebe e quem menos recebe na empresa e a média salarial da empresa
 #Quem mais recebe e quem menos recebe em cada área e a média salarial em cada área
 #A área com mais funcionários e a área com menos funcionários
@@ -28,8 +29,22 @@ f = dao("F")
 
 def pandasImport():
     n = dao("F")
+    a = dao("A")
     dfpandas = pd.DataFrame.from_dict(n)
+    dfarea = pd.DataFrame.from_dict(a)
     print(dfpandas.sort_values(by=['area','salario','nome'], ascending=True).loc[:,["area","salario","nome"]])
+    for i  in dfpandas['area'].unique():
+        aux = dfpandas[dfpandas['area']==i]
+        k=aux.loc[:,['nome','salario']]
+
+        print("\nSalário Máximo na área %s %.2f " % (dfarea[dfarea['codigo']==i]['nome'].unique()[0], aux['salario'].max()) )
+        print(k[k['salario']==aux['salario'].max()])
+
+        print("Salário Mínimo na área %s %.2f " % (dfarea[dfarea['codigo']==i]['nome'].unique()[0], aux['salario'].min()) )
+        print(k[k['salario']==aux['salario'].min()])
+
+        print("Salário Médio na área  %s %.2f " % (dfarea[dfarea['codigo']==i]['nome'].unique()[0], aux['salario'].mean()) ) 
+
     return dfpandas
 
 def showSibblings():
@@ -70,36 +85,16 @@ def checkMinSal(dd):
             nome = dd[i]['nome']
     return (nome, min)
 
-def checkAreaSal():
+def checkAreaCount():
     stArea =  dao("A")
     stFunc = dao("F")
     count = []
     for i in range(0,len(stArea)):
-        sum = 0
-        index  = 0
-        idmax = ""
-        idmin = ""
+        index=0
         for k in range(0,len(stFunc)):
-            smax = 0
             if stArea[i]['codigo'] == stFunc[k]['area']:
-                sum += stFunc[k]['salario']
                 index+=1
-
-                if stFunc[k]['salario'] > smax:
-                    smax = stFunc[k]['salario']
-                    idmax = (stFunc[k]['nome'], stFunc[k]['salario'], stFunc[k]['area'])
-
-                smin = stFunc[k]['salario']
-
-                if stFunc[k]['salario'] < smin:
-                    smin = stFunc[k]['salario']
-                    idmin = (stFunc[k]['nome'], stFunc[k]['salario'], stFunc[k]['area'])
         count.append(index)
-        print("Média Salarial em \"%s\" \t %.2f " % (stArea[i]['nome'], sum/index))
-        #print("Funcionário  %s está rico ganhando %.2f na área %s" % (idmax[0], idmax[1], idmax[2]) )
-        print("Max: %s %s" %(idmax,smax,))
-        print("Min: %s %s" %(idmin,smin,))
-        #print("Funcionário  %s está pobre ganhando %.2f na área %s" % (idmin[0], idmin[1], idmin[2]) )
     print("Área com (+) integrantes: %i %s" % (max(count), stArea[count.index(max(count))]['nome']) )
     print("Área com (-) integrantes: %i %s" % (min(count), stArea[count.index(min(count))]['nome']) )
 
@@ -113,10 +108,10 @@ while(True):
     print("--{:: Desafio 5 ::}--")
     print("1 - Mostrar Tabela")
     print("2 - Estatística Geral")
-    print("3 - Estatística Área")
-    print("4 - Pandas MODE")
-    print("5 - Sair")
-    print("6 - Sibblings")
+    print("3 - Contagem por Área")
+    print("4 - Min, Méd, Máx Área")
+    print("5 - Sibblings")
+    print("6 - Sair")
     ans = int(input())
     if ans == 1:
         screenClear()
@@ -128,16 +123,16 @@ while(True):
         next()
     if ans == 3:
         screenClear()
-        checkAreaSal()
+        checkAreaCount()
         next()
     if ans == 4:
         screenClear()
         pandasImport()
         next()
     if ans == 5:
+        screenClear()
+        showSibblings()
+        next()
+    if ans == 6:
         print("Bye!")
         break
-    if ans == 6:
-    	screenClear()
-    	showSibblings()
-    	next()
